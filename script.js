@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // Fetch Data
             let draw;
             try {
-                const { data, error } = await db.rpc('get_random_card', { card_type: 'truth' });
+                const { data, error } = await db.rpc('get_random_card', { card_type: gameState.type });
                 if (data && data.length > 0) draw = data[0];
             } catch (e) { }
 
@@ -45,18 +45,30 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // ── Safe Navigation (Clean + Professional) ───────────────────
-    const btnTruth = document.getElementById("choose-truth");
-    const btnDare = document.getElementById("choose-dare");
+    // ── Safe Navigation (Dual Page System) ───────────────────
+    const selectionPage = document.getElementById("selectionPage");
+    const ritualPage = document.getElementById("ritualPage");
+    const btnTruth = document.getElementById("btnTruth");
+    const btnDare = document.getElementById("btnDare");
+
+    const gameState = {
+        type: 'truth'
+    };
+
+    function showRitual(type) {
+        gameState.type = type;
+        document.body.className = type + "-theme";
+
+        selectionPage.classList.remove("active");
+        ritualPage.classList.add("active");
+
+        // Play whoosh for transition
+        drawWhoosh.play().catch(() => { });
+    }
 
     if (btnTruth && btnDare) {
         btnTruth.addEventListener("click", () => showRitual("truth"));
         btnDare.addEventListener("click", () => showRitual("dare"));
-    }
-
-    function showRitual(mode) {
-        console.log("Switching to ritual:", mode);
-        // Page switching logic can be restored here if needed
     }
 
     resetBtn.addEventListener('click', () => {
