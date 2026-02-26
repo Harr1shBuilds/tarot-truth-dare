@@ -143,10 +143,17 @@ document.addEventListener("DOMContentLoaded", function () {
             requestAnimationFrame(() => {
                 // Clone the prepared card
                 const clone = card.cloneNode(true);
-                clone.classList.add('flipped'); // Ensure clone starts flipped or animates
+
+                // CRITICAL: Clean up state and ensure flip
+                clone.classList.remove('dim', 'active', 'fullscreen');
+                clone.classList.add('flipped');
 
                 overlay.innerHTML = "";
                 overlay.appendChild(clone);
+
+                // Move reset button into overlay so it flows below the card
+                overlay.appendChild(btnAgain);
+
                 overlay.classList.add("active");
 
                 playChime();
@@ -163,6 +170,10 @@ document.addEventListener("DOMContentLoaded", function () {
     btnAgain.addEventListener('click', () => {
         playWhoosh();
         overlay.classList.remove('active');
+
+        // Return button to original home (so it doesn't vanish)
+        document.querySelector('.tarot-stage').appendChild(btnAgain);
+
         overlay.innerHTML = "";
 
         body.classList.remove('ritual-focus');
