@@ -181,16 +181,46 @@ body {
 
 /* Mobile */
 @media (max-width: 600px) {
+    .ritual-stage {
+        height: auto;
+        min-height: 100vh;
+        padding: 40px 0;
+        overflow-y: auto;
+    }
+
     .spread {
-        gap: 20px;
+        flex-direction: column;
+        gap: 30px;
+        padding-bottom: 100px;
+        /* Room for reset button */
     }
 
     .tarot-card {
-        width: 220px;
-        height: 360px;
+        width: min(80vw, 240px);
+        height: auto;
+        aspect-ratio: 2/3;
+    }
+
+    .path-choice {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .mystic-title {
+        font-size: 42px;
+        letter-spacing: 4px;
+        margin-bottom: 30px;
+    }
+
+    .ritual-btn {
+        width: 80vw;
     }
 
     .ritual-text {
         font-size: 16px;
+    }
+
+    .btn-reset {
+        bottom: 20px;
     }
 }
