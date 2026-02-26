@@ -148,6 +148,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 gameState.revealedCount++;
                 gameState.isFlipping = false;
 
+                // 4. Cinematic Scroll to Center
+                card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
                 // Show reset after first reveal
                 if (gameState.revealedCount >= 1) {
                     btnAgain.classList.add('visible');
