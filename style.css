@@ -1,24 +1,72 @@
 /* ============================================================
-   style.css — Minimalist Universal Version
-   v9.0 - Maximum Visibility Fix
+   style.css — Premium Visual Overhaul (v13.0)
+   Ethereal | Mystic | Immersive
    ============================================================ */
 
 :root {
     --gold: #d4af37;
+    --gold-glow: rgba(212, 175, 55, 0.4);
+    --truth-blue: #1a1f3a;
+    --truth-glow: rgba(26, 31, 58, 0.8);
+    --dare-red: #3a1a1a;
+    --dare-glow: rgba(58, 26, 26, 0.8);
+    --glass: rgba(0, 0, 0, 0.6);
+    --glass-border: rgba(212, 175, 55, 0.3);
+}
+
+* {
+    box-sizing: border-box;
 }
 
 body {
     margin: 0;
-    background: radial-gradient(circle at center, #1a1f3a 0%, #000 75%);
+    background: #000;
     font-family: 'Playfair Display', serif;
     overflow: hidden;
     min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    color: #fff;
+    transition: background 1.5s ease;
 }
 
-/* ================= RESET BUTTON ================= */
+body.truth-theme {
+    background: radial-gradient(circle at center, var(--truth-blue) 0%, #000 80%);
+}
+
+body.dare-theme {
+    background: radial-gradient(circle at center, var(--dare-red) 0%, #000 80%);
+}
+
+/* Ambient Pulsing Glow */
+.ambient-glow {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(circle at 50% 50%, var(--gold-glow) 0%, transparent 70%);
+    opacity: 0.2;
+    animation: pulseGlow 8s infinite alternate ease-in-out;
+}
+
+@keyframes pulseGlow {
+    from {
+        opacity: 0.1;
+        transform: scale(0.8);
+    }
+
+    to {
+        opacity: 0.3;
+        transform: scale(1.2);
+    }
+}
+
+#particleCanvas {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+/* ================= PAGE SYSTEM ================= */
 
 .page {
     display: none;
@@ -29,46 +77,111 @@ body {
     align-items: center;
     justify-content: center;
     z-index: 10;
+    animation: fadeIn 1s ease forwards;
 }
 
 .page.active {
     display: flex;
 }
 
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(1.05);
+        filter: blur(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0);
+    }
+}
+
 /* Selection Page Aesthetics */
-.ritual-content {
+.mystic-sigil {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background: url('https://www.transparenttextures.com/patterns/az-subtle.png');
+    border: 2px solid var(--gold-border);
+    border-radius: 50%;
+    opacity: 0.1;
+    animation: slowRotate 60s infinite linear;
+    pointer-events: none;
+}
+
+@keyframes slowRotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.glass-box {
+    background: var(--glass);
+    backdrop-filter: blur(15px);
+    padding: 60px 80px;
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.5), inset 0 0 20px var(--gold-glow);
     text-align: center;
+    position: relative;
+    z-index: 20;
 }
 
 .mystic-title {
     font-size: clamp(32px, 8vw, 64px);
-    letter-spacing: 8px;
+    letter-spacing: 12px;
     margin-bottom: 50px;
     color: var(--gold);
     font-style: italic;
+    text-shadow: 0 0 15px var(--gold-glow);
 }
 
 .path-choice {
     display: flex;
-    gap: 30px;
+    gap: 40px;
 }
 
 .ritual-btn {
-    padding: 15px 40px;
+    position: relative;
+    padding: 18px 50px;
     font-family: serif;
-    font-size: 18px;
-    letter-spacing: 3px;
+    font-size: 20px;
+    letter-spacing: 5px;
     border: 1px solid var(--gold);
-    background: none;
+    background: transparent;
     color: #fff;
     cursor: pointer;
-    transition: all 0.3s ease;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.btn-glow {
+    position: absolute;
+    top: 50%;
+    left: -100%;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    transition: left 0.6s ease;
 }
 
 .ritual-btn:hover {
-    background: rgba(212, 175, 55, 0.1);
-    transform: translateY(-5px);
+    background: var(--gold-glow);
+    transform: translateY(-8px) scale(1.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px var(--gold-glow);
 }
+
+.ritual-btn:hover .btn-glow {
+    left: 100%;
+}
+
+/* ================= RITUAL STAGE ================= */
 
 .ritual-stage {
     width: 100%;
@@ -78,46 +191,66 @@ body {
     align-items: center;
     justify-content: center;
     position: relative;
-    perspective: 1000px;
+    perspective: 2000px;
 }
 
 /* Spread */
 .spread {
     display: flex;
-    gap: 40px;
+    gap: 50px;
     transition: opacity 0.4s ease;
+    filter: drop-shadow(0 0 30px rgba(0, 0, 0, 0.8));
 }
 
-/* Initial rise animation */
+/* Base Card Styles */
 .tarot-card {
-    width: min(22vw, 240px);
+    width: 240px;
     aspect-ratio: 2/3;
     position: relative;
     cursor: pointer;
-    transition: transform 0.3s ease;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     transform-style: preserve-3d;
+    animation: cardFloat 6s infinite alternate ease-in-out;
+}
+
+/* Offset float timing for realism */
+.tarot-card:nth-child(2) {
+    animation-delay: -2s;
+}
+
+.tarot-card:nth-child(3) {
+    animation-delay: -4s;
+}
+
+@keyframes cardFloat {
+    from {
+        transform: translateY(0) rotateX(0);
+    }
+
+    to {
+        transform: translateY(-15px) rotateX(2deg);
+    }
 }
 
 .tarot-card.active {
-    transform: translateY(-20px) scale(1.05);
+    transform: translateY(-40px) scale(1.15) !important;
+    z-index: 100;
+    animation: none;
+    filter: drop-shadow(0 20px 50px rgba(0, 0, 0, 1));
 }
 
 .tarot-card.dim {
-    opacity: 0.3;
-    filter: blur(2px);
-    transform: scale(0.9);
+    opacity: 0.2;
+    filter: blur(4px) grayscale(0.5);
+    transform: scale(0.85);
     pointer-events: none;
-}
-
-.tarot-card:hover {
-    transform: translateY(-10px);
 }
 
 .card-inner {
     position: relative;
     width: 100%;
     height: 100%;
-    transition: transform 0.6s;
+    transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
     transform-style: preserve-3d;
 }
 
@@ -129,60 +262,104 @@ body {
     position: absolute;
     inset: 0;
     backface-visibility: hidden;
-    border: 8px solid var(--gold);
-    border-radius: 12px;
-    background: #0a0a0a;
+    border: 6px double var(--gold);
+    border-radius: 10px;
+    background: #000;
 }
 
 .card-back {
     background: url('cvm.jpeg') center/cover no-repeat;
 }
 
+/* Decorative Card Back Shimmer */
+.card-back::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 45%, rgba(255, 255, 255, 0.1) 50%, transparent 55%);
+    background-size: 200% 200%;
+    animation: shimmer 4s infinite linear;
+}
+
+@keyframes shimmer {
+    from {
+        background-position: 200% 200%;
+    }
+
+    to {
+        background-position: -200% -200%;
+    }
+}
+
 .card-front {
     transform: rotateY(180deg);
-    background: linear-gradient(to bottom, #1a1f3a, #0a0a0a);
+    background: linear-gradient(135deg, #111 0%, #000 100%);
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px;
+    padding: 30px 20px;
     text-align: center;
+    box-shadow: inset 0 0 30px var(--gold-glow);
 }
 
 .card-header-ornate {
     border-bottom: 1px solid var(--gold);
-    width: 100%;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
+    width: 80%;
+    padding-bottom: 15px;
+    margin-bottom: 30px;
 }
 
 .card-numeral {
     color: var(--gold);
-    font-weight: bold;
+    font-size: 24px;
+    letter-spacing: 3px;
+    font-family: serif;
+}
+
+.ritual-type {
+    color: #fff;
+    font-size: 12px;
+    letter-spacing: 5px;
+    margin-bottom: 20px;
+    opacity: 0.6;
 }
 
 .ritual-text {
     color: #f5d97a;
-    font-size: 14px;
-    line-height: 1.4;
+    font-size: 18px;
+    line-height: 1.6;
+    font-style: italic;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-/* Reset */
+.card-footer-ornate {
+    margin-top: auto;
+    width: 40px;
+    height: 2px;
+    background: var(--gold);
+    box-shadow: 0 0 10px var(--gold);
+}
+
+/* ================= RESET BUTTON ================= */
+
 .btn-reset {
     position: fixed;
-    bottom: 50px;
+    bottom: 40px;
     left: 50%;
     transform: translateX(-50%);
-    padding: 14px 40px;
+    padding: 16px 45px;
     border: 1px solid var(--gold);
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.8);
     color: var(--gold);
     font-family: serif;
-    letter-spacing: 3px;
+    font-size: 14px;
+    letter-spacing: 4px;
     cursor: pointer;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.3s ease;
+    transition: all 0.4s ease;
     z-index: 3000;
+    backdrop-filter: blur(5px);
 }
 
 .btn-reset.visible {
@@ -190,26 +367,46 @@ body {
     pointer-events: auto;
 }
 
-/* Mobile */
+.btn-reset:hover {
+    background: var(--gold);
+    color: #000;
+    box-shadow: 0 0 30px var(--gold-glow);
+}
+
+/* ================= MOBILE ================= */
+
 @media (max-width: 600px) {
     .ritual-stage {
         height: auto;
         min-height: 100vh;
-        padding: 40px 0;
+        padding: 60px 0;
         overflow-y: auto;
     }
 
     .spread {
         flex-direction: column;
-        gap: 30px;
-        padding-bottom: 100px;
-        /* Room for reset button */
+        gap: 40px;
+        padding-bottom: 120px;
     }
 
     .tarot-card {
-        width: min(80vw, 240px);
-        height: auto;
-        aspect-ratio: 2/3;
+        width: 260px;
+        animation: cardFloatMobile 5s infinite alternate ease-in-out;
+    }
+
+    @keyframes cardFloatMobile {
+        from {
+            transform: translateY(0);
+        }
+
+        to {
+            transform: translateY(-10px);
+        }
+    }
+
+    .glass-box {
+        padding: 40px 20px;
+        width: 90vw;
     }
 
     .path-choice {
@@ -217,21 +414,18 @@ body {
         gap: 20px;
     }
 
-    .mystic-title {
-        font-size: 42px;
-        letter-spacing: 4px;
-        margin-bottom: 30px;
-    }
-
     .ritual-btn {
-        width: 80vw;
+        width: 100%;
+        font-size: 18px;
     }
 
-    .ritual-text {
-        font-size: 16px;
+    .mystic-sigil {
+        width: 100vw;
+        height: 100vw;
     }
 
-    .btn-reset {
-        bottom: 20px;
+    .mystic-title {
+        font-size: 36px;
+        letter-spacing: 6px;
     }
 }

@@ -9,21 +9,29 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&family=Inter:wght@300;400&display=swap"
         rel="stylesheet" />
-    <link rel="stylesheet" href="style.css?v=12.0" />
+    <link rel="stylesheet" href="style.css?v=13.0" />
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 
 <body class="truth-theme">
 
+    <div class="ambient-glow"></div>
     <canvas id="particleCanvas"></canvas>
 
     <!-- 🏰 PAGE 1: The Path Selection -->
     <div class="page active" id="selectionPage">
-        <div class="ritual-content">
+        <div class="mystic-sigil"></div>
+        <div class="ritual-content glass-box">
             <h1 class="mystic-title">CHOOSE YOUR PATH</h1>
             <div class="path-choice">
-                <button class="ritual-btn" id="btnTruth">TRUTH</button>
-                <button class="ritual-btn" id="btnDare">DARE</button>
+                <button class="ritual-btn" id="btnTruth">
+                    <span class="btn-glow"></span>
+                    TRUTH
+                </button>
+                <button class="ritual-btn" id="btnDare">
+                    <span class="btn-glow"></span>
+                    DARE
+                </button>
             </div>
         </div>
     </div>
@@ -35,39 +43,48 @@
                 <!-- Card 0 -->
                 <div class="tarot-card" data-slot="0">
                     <div class="card-inner">
-                        <div class="card-face card-back"></div>
+                        <div class="card-face card-back">
+                            <div class="back-pattern"></div>
+                        </div>
                         <div class="card-face card-front">
                             <div class="card-header-ornate"><span class="card-numeral">XIV</span></div>
                             <div class="reveal-content">
                                 <div class="ritual-type">TRUTH</div>
                                 <div class="ritual-text">Waiting...</div>
                             </div>
+                            <div class="card-footer-ornate"></div>
                         </div>
                     </div>
                 </div>
                 <!-- Card 1 -->
                 <div class="tarot-card" data-slot="1">
                     <div class="card-inner">
-                        <div class="card-face card-back"></div>
+                        <div class="card-face card-back">
+                            <div class="back-pattern"></div>
+                        </div>
                         <div class="card-face card-front">
                             <div class="card-header-ornate"><span class="card-numeral">X</span></div>
                             <div class="reveal-content">
                                 <div class="ritual-type">TRUTH</div>
                                 <div class="ritual-text">Waiting...</div>
                             </div>
+                            <div class="card-footer-ornate"></div>
                         </div>
                     </div>
                 </div>
                 <!-- Card 2 -->
                 <div class="tarot-card" data-slot="2">
                     <div class="card-inner">
-                        <div class="card-face card-back"></div>
+                        <div class="card-face card-back">
+                            <div class="back-pattern"></div>
+                        </div>
                         <div class="card-face card-front">
                             <div class="card-header-ornate"><span class="card-numeral">VI</span></div>
                             <div class="reveal-content">
                                 <div class="ritual-type">TRUTH</div>
                                 <div class="ritual-text">Waiting...</div>
                             </div>
+                            <div class="card-footer-ornate"></div>
                         </div>
                     </div>
                 </div>
