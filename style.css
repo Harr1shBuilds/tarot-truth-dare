@@ -412,12 +412,10 @@ body.dare-theme {
     font-family: serif;
 }
 
-.ritual-type {
-    color: #fff;
-    font-size: 12px;
-    letter-spacing: 5px;
-    margin-bottom: 20px;
-    opacity: 0.6;
+.ritual-symbol {
+    font-size: 32px;
+    margin-bottom: 15px;
+    filter: drop-shadow(0 0 8px var(--gold-glow));
 }
 
 .ritual-text {
@@ -487,38 +485,51 @@ body.dare-theme {
 
     .spread {
         flex-direction: row;
-        gap: 15px;
-        padding: 0 10px;
-        width: 100%;
+        flex-wrap: nowrap;
+        gap: 10px;
+        padding: 0 5px;
+        width: 100vw;
+        max-width: 100%;
         justify-content: center;
         align-items: center;
+        overflow-x: visible;
     }
 
     .tarot-card {
-        width: calc(33.33% - 20px);
-        max-width: 120px;
-        min-width: 80px;
+        width: calc(33.33vw - 15px);
+        max-width: 110px;
+        min-width: 70px;
         height: auto;
         aspect-ratio: 2/3;
         animation: cardFloatMobile 5s infinite alternate ease-in-out;
     }
 
+    .card-front {
+        padding: 15px 10px !important;
+    }
+
     .card-numeral {
-        font-size: 14px;
-    }
-
-    .ritual-type {
-        font-size: 8px;
-        margin-bottom: 10px;
-    }
-
-    .ritual-text {
         font-size: 12px;
     }
 
+    .ritual-symbol {
+        font-size: 16px;
+        margin-bottom: 8px;
+        filter: drop-shadow(0 0 5px var(--gold));
+    }
+
+    .ritual-text {
+        font-size: clamp(9px, 2.5vw, 11px);
+        line-height: 1.3;
+        overflow-wrap: break-word;
+        word-break: break-word;
+        max-height: 60%;
+        overflow: hidden;
+    }
+
     .card-header-ornate {
-        margin-bottom: 15px;
-        padding-bottom: 5px;
+        margin-bottom: 10px;
+        padding-bottom: 3px;
     }
 
     .card-face {
@@ -531,7 +542,7 @@ body.dare-theme {
         }
 
         to {
-            transform: translateY(-8px);
+            transform: translateY(-5px);
         }
     }
 
