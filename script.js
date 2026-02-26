@@ -138,19 +138,21 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             // 3. The Grand Reveal (Delay for Drama)
-            setTimeout(() => {
-                card.classList.add('flipped');
-                card.classList.add('fullscreen'); // Cinematic Growth
-                playChime();
-                triggerHaptic('impact');
-                gameState.revealedCount++;
-                gameState.isFlipping = false;
+            requestAnimationFrame(() => {
+                setTimeout(() => {
+                    card.classList.add('flipped');
+                    card.classList.add('fullscreen'); // Cinematic Growth
+                    playChime();
+                    triggerHaptic('impact');
+                    gameState.revealedCount++;
+                    gameState.isFlipping = false;
 
-                // Show reset after first reveal
-                if (gameState.revealedCount >= 1) {
-                    btnAgain.classList.add('visible');
-                }
-            }, 200); // Quick transition as requested
+                    // Show reset after first reveal
+                    if (gameState.revealedCount >= 1) {
+                        btnAgain.classList.add('visible');
+                    }
+                }, 200); // Quick transition as requested
+            });
         });
     });
 
