@@ -1,194 +1,67 @@
 document.addEventListener("DOMContentLoaded", function () {
-    /* ============================================================
-       script.js — Mystical Tarot (Ritual Version)
-       3D Card Ritual + Path Selection + Ambient FX
-       ============================================================ */
-
     // ── Supabase Config ────────────────────────────────────────────
     const SUPABASE_URL = 'https://xkaozfnnosnrifewsvmh.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhrYW96Zm5ub3NucmlmZXdzdm1oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwMjkzNDIsImV4cCI6MjA4NzYwNTM0Mn0.uF07fMYKbCc8hL9brhpVOUpnstWcx7ZdKcv2MqJ4Gvg';
-
     const { createClient } = supabase;
     const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // ── 🧠 1. Pure State Management ────────────────────────────────
-    const gameState = {
-        type: 'truth',     // 'truth' | 'dare'
-        isFlipping: false,
-        revealedCount: 0,
-        lastCardId: null
-    };
-
-    // ── DOM Refs ───────────────────────────────────────────────────
-    const body = document.body;
-    const pageSelect = document.getElementById('page-select');
-    const pageRitual = document.getElementById('page-ritual');
-    const btnTruth = document.getElementById('choose-truth');
-    const btnDare = document.getElementById('choose-dare');
-    const btnBack = document.getElementById('btn-back');
-
     const cards = document.querySelectorAll('.tarot-card');
-    const btnAgain = document.getElementById('btn-again');
-    const drawHint = document.getElementById('draw-hint');
-
-    // ── 🔊 Ambient Audio ──────────────────────────────────────────
-    const drawWhoosh = new Audio('sounds/whoosh.mp3');
-    const revealChime = new Audio('sounds/chime.mp3');
-
-    [drawWhoosh, revealChime].forEach(s => s.preload = "auto");
-    drawWhoosh.volume = 0.5;
-    revealChime.volume = 0.6;
-
-    function playWhoosh() {
-        drawWhoosh.currentTime = 0;
-        drawWhoosh.play().catch(() => { });
-    }
-
-    function playChime() {
-        revealChime.currentTime = 0;
-        revealChime.play().catch(() => { });
-    }
-
-    function triggerHaptic(type = 'short') {
-        if (!navigator.vibrate) return;
-        if (type === 'short') navigator.vibrate(30);
-        else if (type === 'impact') navigator.vibrate([20, 40, 20]);
-    }
-
-    // ── 🔮 2. Navigation Logic ────────────────────────────────────
-    function switchToRitual(mode) {
-        // Reset lastCardId when switching paths (Moon vs Flame)
-        if (gameState.type !== mode) {
-            gameState.lastCardId = null;
-        }
-
-        gameState.type = mode;
-        body.className = `${mode}-theme`;
-
-        playWhoosh();
-        pageSelect.classList.remove('active');
-
-        // Reset spread for re-emergence
-        cards.forEach(card => {
-            card.classList.remove('flipped', 'active', 'dim');
-            const typeEl = card.querySelector('.ritual-type');
-            const textEl = card.querySelector('.ritual-text');
-            if (typeEl) typeEl.textContent = '';
-            if (textEl) textEl.textContent = 'Waiting for the draw...';
-        });
-        btnAgain.classList.remove('visible');
-        gameState.revealedCount = 0;
-        gameState.isFlipping = false;
-
-        setTimeout(() => {
-            pageRitual.classList.add('active');
-        }, 300);
-    }
-
-    function switchToSelect() {
-        playWhoosh();
-        pageRitual.classList.remove('active');
-        setTimeout(() => {
-            pageSelect.classList.add('active');
-        }, 300);
-    }
-
-    btnTruth.addEventListener('click', () => switchToRitual('truth'));
-    btnDare.addEventListener('click', () => switchToRitual('dare'));
-    btnBack.addEventListener('click', switchToSelect);
-
     const focusLayer = document.getElementById('focusLayer');
     const resetBtn = document.getElementById('resetBtn');
 
-    // ── 🔮 3. The Ritual (Universal Focus Layer) ───────────────────
-    cards.forEach((card, index) => {
+    // Audio
+    const drawWhoosh = new Audio('sounds/whoosh.mp3');
+    const revealChime = new Audio('sounds/chime.mp3');
+
+    cards.forEach(card => {
         card.addEventListener('click', async () => {
-            if (gameState.isFlipping || card.classList.contains('flipped') || focusLayer.classList.contains('active')) return;
-            gameState.isFlipping = true;
+            if (focusLayer.classList.contains('active')) return;
 
-            // 1. Arcane Focus
-            cards.forEach(c => {
-                if (c !== card) c.classList.add('dim');
-            });
-            body.classList.add('ritual-focus');
+            // Optional: Dim other cards
+            cards.forEach(c => { if (c !== card) c.classList.add('dim'); });
 
-            triggerHaptic('short');
-            playWhoosh();
-
-            // 2. Fetch Ritual Data from Ether
+            // Fetch Data
             let draw;
-            let retryCount = 0;
-            while (retryCount < 3) {
-                const { data, error } = await db.rpc('get_random_card', { card_type: gameState.type });
-                if (error || !data || data.length === 0) break;
-                draw = data[0];
-                if (draw.id !== gameState.lastCardId) break;
-                retryCount++;
-            }
+            try {
+                const { data, error } = await db.rpc('get_random_card', { card_type: 'truth' });
+                if (data && data.length > 0) draw = data[0];
+            } catch (e) { }
 
-            const cardReveal = card.querySelector('.reveal-content');
-            const typeEl = cardReveal?.querySelector('.ritual-type');
-            const textEl = cardReveal?.querySelector('.ritual-text');
+            // Update original card UI before cloning
+            const textEl = card.querySelector('.ritual-text');
+            if (textEl && draw) textEl.textContent = draw.text;
 
-            if (textEl) {
-                if (!draw) {
-                    textEl.textContent = "The ether is silent...";
-                } else {
-                    gameState.lastCardId = draw.id;
-                    if (typeEl) typeEl.textContent = gameState.type.toUpperCase();
-                    textEl.textContent = draw.text;
-                }
-            }
+            // Clone and Focus
+            const clone = card.cloneNode(true);
+            clone.classList.remove('dim');
+            clone.classList.add('flipped');
 
-            // 3. The Grand Reveal (Focus Layer Migration)
-            requestAnimationFrame(() => {
-                // Prepare focused clone
-                const clone = card.cloneNode(true);
-                clone.classList.remove('dim');
-                clone.classList.add('flipped', 'focus-card');
+            focusLayer.innerHTML = "";
+            focusLayer.appendChild(clone);
+            focusLayer.classList.add('active');
+            resetBtn.classList.add('visible');
 
-                focusLayer.innerHTML = "";
-                focusLayer.appendChild(clone);
-                focusLayer.classList.add('active');
-
-                playChime();
-                triggerHaptic('impact');
-
-                gameState.revealedCount++;
-                gameState.isFlipping = false;
-                resetBtn.classList.add('visible');
-            });
+            revealChime.play().catch(() => { });
         });
     });
 
     resetBtn.addEventListener('click', () => {
-        playWhoosh();
         focusLayer.classList.remove('active');
         focusLayer.innerHTML = "";
-
-        body.classList.remove('ritual-focus');
-        cards.forEach(card => {
-            card.classList.remove('dim', 'flipped');
-        });
         resetBtn.classList.remove('visible');
-        gameState.revealedCount = 0;
-        gameState.isFlipping = false;
+        cards.forEach(card => card.classList.remove('dim', 'flipped'));
+        drawWhoosh.play().catch(() => { });
     });
 
-    // ── 🌌 4. Background Particles (Arcane Dust & Stars) ───────────
+    // Background Particles
     (function initParticles() {
         const canvas = document.getElementById('particleCanvas');
         if (!canvas) return;
         const pc = canvas.getContext('2d');
         let pts = [];
-
-        function resize() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
         resize();
         window.addEventListener('resize', resize);
-
         function spawn() {
             return {
                 x: Math.random() * canvas.width,
@@ -196,41 +69,18 @@ document.addEventListener("DOMContentLoaded", function () {
                 r: Math.random() * 1.5 + 0.5,
                 v: 0.05 + Math.random() * 0.1,
                 a: Math.random() * 0.6,
-                type: Math.random() > 0.8 ? 'star' : 'dust', // 20% stars
-                p: Math.random() * Math.PI * 2 // pulse phase
+                p: Math.random() * Math.PI * 2
             };
         }
-
         for (let i = 0; i < 60; i++) pts.push(spawn());
-
-        function drawShape(p) {
-            pc.beginPath();
-            if (p.type === 'star') {
-                // Draw a tiny cross/star
-                const s = p.r * 2;
-                pc.moveTo(p.x - s, p.y);
-                pc.lineTo(p.x + s, p.y);
-                pc.moveTo(p.x, p.y - s);
-                pc.lineTo(p.x, p.y + s);
-            } else {
-                pc.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-            }
-            // Twinkle effect
-            const alpha = p.a * (0.5 + Math.sin(Date.now() * 0.002 + p.p) * 0.5);
-            pc.strokeStyle = `rgba(212, 175, 55, ${alpha})`;
-            pc.fillStyle = `rgba(184, 134, 11, ${alpha})`;
-            p.type === 'star' ? pc.stroke() : pc.fill();
-        }
-
         function draw() {
             pc.clearRect(0, 0, canvas.width, canvas.height);
             pts.forEach(p => {
                 p.y -= p.v;
-                if (p.y < -10) {
-                    Object.assign(p, spawn());
-                    p.y = canvas.height + 10;
-                }
-                drawShape(p);
+                if (p.y < -10) { Object.assign(p, spawn()); p.y = canvas.height + 10; }
+                const alpha = p.a * (0.5 + Math.sin(Date.now() * 0.002 + p.p) * 0.5);
+                pc.fillStyle = `rgba(212, 175, 55, ${alpha})`;
+                pc.beginPath(); pc.arc(p.x, p.y, p.r, 0, Math.PI * 2); pc.fill();
             });
             requestAnimationFrame(draw);
         }

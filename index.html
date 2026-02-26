@@ -9,7 +9,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&family=Inter:wght@300;400&display=swap"
         rel="stylesheet" />
-    <link rel="stylesheet" href="style.css?v=8.0" />
+    <link rel="stylesheet" href="style.css?v=9.0" />
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 
@@ -17,111 +17,62 @@
 
     <canvas id="particleCanvas"></canvas>
 
-    <!-- Overlay for Transitions -->
-    <div class="ritual-overlay" id="ritual-overlay"></div>
-
-    <!-- 🏰 PAGE 1: The Path Selection -->
-    <section id="page-select" class="page active">
-        <div class="ritual-content">
-            <h1 class="mystic-title">CHOOSE<br>YOUR<br>PATH</h1>
-            <div class="path-choice">
-                <div class="choice-item">
-                    <button id="choose-truth" class="ritual-btn moon" data-mode="truth">MOON PATH</button>
-                    <span>(Truth)</span>
-                </div>
-                <div class="choice-divider"></div>
-                <div class="choice-item">
-                    <button id="choose-dare" class="ritual-btn flame" data-mode="dare">FLAME PATH</button>
-                    <span>(Dare)</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 🔮 PAGE 2: The Ritual Stage -->
-    <section id="page-ritual" class="page">
-        <button id="btn-back" class="mystic-back">← Return to the Paths</button>
-
-        <div class="ritual-stage">
-            <div class="spread" id="spread">
-                <!-- Card 0 -->
-                <div class="tarot-card" data-slot="0">
-                    <div class="card-inner">
-                        <div class="card-face card-back">
-                            <div class="card-pattern"></div>
-                        </div>
-                        <div class="card-face card-front">
-                            <div class="card-header-ornate">
-                                <div class="card-numeral">XIV</div>
-                            </div>
-                            <div class="reveal-content">
-                                <div class="ritual-type">TRUTH</div>
-                                <div class="ritual-text">Waiting for the draw...</div>
-                            </div>
-                            <div class="card-footer-ornate">
-                                <div class="card-emblem-small">🏺</div>
-                                <div class="card-name-banner">TEMPERANCE</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Card 1 -->
-                <div class="tarot-card" data-slot="1">
-                    <div class="card-inner">
-                        <div class="card-face card-back">
-                            <div class="card-pattern"></div>
-                        </div>
-                        <div class="card-face card-front">
-                            <div class="card-header-ornate">
-                                <div class="card-numeral">XIV</div>
-                            </div>
-                            <div class="reveal-content">
-                                <div class="ritual-type">TRUTH</div>
-                                <div class="ritual-text">Waiting for the draw...</div>
-                            </div>
-                            <div class="card-footer-ornate">
-                                <div class="card-emblem-small">🏺</div>
-                                <div class="card-name-banner">TEMPERANCE</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Card 2 -->
-                <div class="tarot-card" data-slot="2">
-                    <div class="card-inner">
-                        <div class="card-face card-back">
-                            <div class="card-pattern"></div>
-                        </div>
-                        <div class="card-face card-front">
-                            <div class="card-header-ornate">
-                                <div class="card-numeral">XIV</div>
-                            </div>
-                            <div class="reveal-content">
-                                <div class="ritual-type">TRUTH</div>
-                                <div class="ritual-text">Waiting for the draw...</div>
-                            </div>
-                            <div class="card-footer-ornate">
-                                <div class="card-emblem-small">🏺</div>
-                                <div class="card-name-banner">TEMPERANCE</div>
-                            </div>
+    <div class="ritual-stage">
+        <div class="spread" id="spread">
+            <!-- Card 0 -->
+            <div class="tarot-card" data-slot="0">
+                <div class="card-inner">
+                    <div class="card-face card-back"></div>
+                    <div class="card-face card-front">
+                        <div class="card-header-ornate"><span class="card-numeral">XIV</span></div>
+                        <div class="reveal-content">
+                            <div class="ritual-type">TRUTH</div>
+                            <div class="ritual-text">Waiting...</div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <p class="draw-hint" id="draw-hint">Silence your mind. Draw one card.</p>
+            <!-- Card 1 -->
+            <div class="tarot-card" data-slot="1">
+                <div class="card-inner">
+                    <div class="card-face card-back"></div>
+                    <div class="card-face card-front">
+                        <div class="card-header-ornate"><span class="card-numeral">X</span></div>
+                        <div class="reveal-content">
+                            <div class="ritual-type">TRUTH</div>
+                            <div class="ritual-text">Waiting...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Card 2 -->
+            <div class="tarot-card" data-slot="2">
+                <div class="card-inner">
+                    <div class="card-face card-back"></div>
+                    <div class="card-face card-front">
+                        <div class="card-header-ornate"><span class="card-numeral">VI</span></div>
+                        <div class="reveal-content">
+                            <div class="ritual-type">TRUTH</div>
+                            <div class="ritual-text">Waiting...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </section>
 
-    <!-- Cinematic Focus Layer -->
-    <div class="focus-layer" id="focusLayer"></div>
+        <div class="focus-layer" id="focusLayer"></div>
 
-    <!-- Reset Button -->
-    <button class="btn-reset" id="resetBtn">RESET THE RITUAL</button>
+        <button class="btn-reset" id="resetBtn">RESET THE RITUAL</button>
+    </div>
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="script.js"></script>
+</body>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="script.js"></script>
 </body>
 
 </html>
