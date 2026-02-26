@@ -97,15 +97,16 @@ document.addEventListener("DOMContentLoaded", function () {
     btnDare.addEventListener('click', () => switchToRitual('dare'));
     btnBack.addEventListener('click', switchToSelect);
 
-    const overlay = document.getElementById('overlay');
+    const focusLayer = document.getElementById('focusLayer');
+    const resetBtn = document.getElementById('resetBtn');
 
-    // ── 🔮 3. The Ritual (Cinematic Overlay) ───────────────────
+    // ── 🔮 3. The Ritual (Universal Focus Layer) ───────────────────
     cards.forEach((card, index) => {
         card.addEventListener('click', async () => {
-            if (gameState.isFlipping || card.classList.contains('flipped') || overlay.classList.contains('active')) return;
+            if (gameState.isFlipping || card.classList.contains('flipped') || focusLayer.classList.contains('active')) return;
             gameState.isFlipping = true;
 
-            // 1. Chosen One Focus
+            // 1. Arcane Focus
             cards.forEach(c => {
                 if (c !== card) c.classList.add('dim');
             });
@@ -139,48 +140,37 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }
 
-            // 3. The Grand Reveal (Cinematic Overlay)
+            // 3. The Grand Reveal (Focus Layer Migration)
             requestAnimationFrame(() => {
-                // Clone the prepared card
+                // Prepare focused clone
                 const clone = card.cloneNode(true);
+                clone.classList.remove('dim');
+                clone.classList.add('flipped', 'focus-card');
 
-                // CRITICAL: Clean up state and ensure flip
-                clone.classList.remove('dim', 'active', 'fullscreen');
-                clone.classList.add('flipped');
-
-                overlay.innerHTML = "";
-                overlay.appendChild(clone);
-
-                // Move reset button into overlay so it flows below the card
-                overlay.appendChild(btnAgain);
-
-                overlay.classList.add("active");
+                focusLayer.innerHTML = "";
+                focusLayer.appendChild(clone);
+                focusLayer.classList.add('active');
 
                 playChime();
                 triggerHaptic('impact');
+
                 gameState.revealedCount++;
                 gameState.isFlipping = false;
-
-                // Show reset
-                btnAgain.classList.add('visible');
+                resetBtn.classList.add('visible');
             });
         });
     });
 
-    btnAgain.addEventListener('click', () => {
+    resetBtn.addEventListener('click', () => {
         playWhoosh();
-        overlay.classList.remove('active');
-
-        // Return button to original home (so it doesn't vanish)
-        document.querySelector('.tarot-stage').appendChild(btnAgain);
-
-        overlay.innerHTML = "";
+        focusLayer.classList.remove('active');
+        focusLayer.innerHTML = "";
 
         body.classList.remove('ritual-focus');
         cards.forEach(card => {
             card.classList.remove('dim', 'flipped');
         });
-        btnAgain.classList.remove('visible');
+        resetBtn.classList.remove('visible');
         gameState.revealedCount = 0;
         gameState.isFlipping = false;
     });

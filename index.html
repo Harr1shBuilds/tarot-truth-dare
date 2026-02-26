@@ -9,7 +9,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&family=Inter:wght@300;400&display=swap"
         rel="stylesheet" />
-    <link rel="stylesheet" href="style.css?v=7.0" />
+    <link rel="stylesheet" href="style.css?v=8.0" />
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 
@@ -42,8 +42,8 @@
     <section id="page-ritual" class="page">
         <button id="btn-back" class="mystic-back">← Return to the Paths</button>
 
-        <div class="tarot-stage">
-            <div class="spread" id="card-spread">
+        <div class="ritual-stage">
+            <div class="spread" id="spread">
                 <!-- Card 0 -->
                 <div class="tarot-card" data-slot="0">
                     <div class="card-inner">
@@ -110,13 +110,14 @@
             </div>
 
             <p class="draw-hint" id="draw-hint">Silence your mind. Draw one card.</p>
-
-            <button id="btn-again" class="btn-reset">RESET THE RITUAL</button>
         </div>
     </section>
 
-    <!-- Cinematic Overlay Container -->
-    <div class="tarot-overlay" id="overlay"></div>
+    <!-- Cinematic Focus Layer -->
+    <div class="focus-layer" id="focusLayer"></div>
+
+    <!-- Reset Button -->
+    <button class="btn-reset" id="resetBtn">RESET THE RITUAL</button>
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
