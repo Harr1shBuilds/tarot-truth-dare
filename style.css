@@ -144,63 +144,178 @@ body.dare-theme {
 }
 
 .glass-box {
-    background: var(--glass);
-    backdrop-filter: blur(15px);
-    padding: 60px 80px;
-    border: 1px solid var(--glass-border);
-    border-radius: 20px;
-    box-shadow: 0 0 40px rgba(0, 0, 0, 0.5), inset 0 0 20px var(--gold-glow);
+    background: rgba(10, 10, 15, 0.7);
+    backdrop-filter: blur(25px);
+    padding: 80px 100px;
+    border: 1px solid var(--gold-border);
+    border-radius: 4px;
+    box-shadow:
+        0 0 60px rgba(0, 0, 0, 0.8),
+        inset 0 0 40px var(--gold-glow),
+        0 0 100px rgba(212, 175, 55, 0.1);
     text-align: center;
     position: relative;
     z-index: 20;
+    animation: floatPanel 8s infinite alternate ease-in-out;
+}
+
+@keyframes floatPanel {
+    0% {
+        transform: translateY(0) rotateX(0);
+    }
+
+    100% {
+        transform: translateY(-25px) rotateX(1deg);
+    }
+}
+
+.box-aura {
+    position: absolute;
+    inset: -20px;
+    background: radial-gradient(circle, var(--gold-glow) 0%, transparent 70%);
+    z-index: -1;
+    filter: blur(30px);
+    opacity: 0.4;
+    animation: auraPulse 5s infinite alternate ease-in-out;
+}
+
+@keyframes auraPulse {
+    from {
+        opacity: 0.2;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 0.5;
+        transform: scale(1.05);
+    }
+}
+
+/* Filigree Corners */
+.corner {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border: 2px solid var(--gold);
+    opacity: 0.6;
+}
+
+.corner.tl {
+    top: 20px;
+    left: 20px;
+    border-right: none;
+    border-bottom: none;
+}
+
+.corner.tr {
+    top: 20px;
+    right: 20px;
+    border-left: none;
+    border-bottom: none;
+}
+
+.corner.bl {
+    bottom: 20px;
+    left: 20px;
+    border-right: none;
+    border-top: none;
+}
+
+.corner.br {
+    bottom: 20px;
+    right: 20px;
+    border-left: none;
+    border-top: none;
 }
 
 .mystic-title {
-    font-size: clamp(32px, 8vw, 64px);
-    letter-spacing: 12px;
-    margin-bottom: 50px;
+    font-size: clamp(32px, 6vw, 56px);
+    letter-spacing: 15px;
+    margin-bottom: 10px;
     color: var(--gold);
-    font-style: italic;
-    text-shadow: 0 0 15px var(--gold-glow);
+    font-weight: 600;
+    text-transform: uppercase;
+    text-shadow: 0 0 20px var(--gold-glow);
+}
+
+.mystic-subtitle {
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    color: var(--gold);
+    opacity: 0.7;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    font-size: 11px;
+    margin-bottom: 60px;
 }
 
 .path-choice {
     display: flex;
-    gap: 40px;
+    gap: 50px;
+    justify-content: center;
 }
 
 .ritual-btn {
     position: relative;
-    padding: 18px 50px;
-    font-family: serif;
-    font-size: 20px;
-    letter-spacing: 5px;
+    padding: 22px 60px;
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 4px;
     border: 1px solid var(--gold);
-    background: transparent;
+    background: rgba(0, 0, 0, 0.4);
     color: #fff;
     cursor: pointer;
     overflow: hidden;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: all 0.5s cubic-bezier(0.2, 1, 0.3, 1);
 }
 
-.btn-glow {
+.ritual-btn::before {
+    content: '';
     position: absolute;
     top: 50%;
     left: -100%;
     width: 100%;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--gold), transparent);
-    transition: left 0.6s ease;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.2), transparent);
+    transform: skewX(-25deg) translateY(-50%);
+    transition: left 0.8s ease;
 }
 
 .ritual-btn:hover {
-    background: var(--gold-glow);
-    transform: translateY(-8px) scale(1.1);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px var(--gold-glow);
+    background: rgba(212, 175, 55, 0.15);
+    border-color: #fff;
+    transform: scale(1.05);
+    box-shadow: 0 0 30px var(--gold-glow);
+}
+
+.ritual-btn:hover::before {
+    left: 100%;
+}
+
+.btn-glow {
+    position: absolute;
+    inset: 0;
+    border: 1px solid var(--gold);
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
 .ritual-btn:hover .btn-glow {
-    left: 100%;
+    opacity: 0.5;
+    animation: btnPulse 2s infinite;
+}
+
+@keyframes btnPulse {
+    0% {
+        transform: scale(1);
+        opacity: 0.5;
+    }
+
+    100% {
+        transform: scale(1.1);
+        opacity: 0;
+    }
 }
 
 /* ================= RITUAL STAGE ================= */
@@ -412,14 +527,43 @@ body.dare-theme {
     }
 
     .spread {
-        flex-direction: column;
-        gap: 40px;
-        padding-bottom: 120px;
+        flex-direction: row;
+        gap: 15px;
+        padding: 0 10px;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
     }
 
     .tarot-card {
-        width: 260px;
+        width: calc(33.33% - 20px);
+        max-width: 120px;
+        min-width: 80px;
+        height: auto;
+        aspect-ratio: 2/3;
         animation: cardFloatMobile 5s infinite alternate ease-in-out;
+    }
+
+    .card-numeral {
+        font-size: 14px;
+    }
+
+    .ritual-type {
+        font-size: 8px;
+        margin-bottom: 10px;
+    }
+
+    .ritual-text {
+        font-size: 12px;
+    }
+
+    .card-header-ornate {
+        margin-bottom: 15px;
+        padding-bottom: 5px;
+    }
+
+    .card-face {
+        border-width: 2px;
     }
 
     @keyframes cardFloatMobile {
@@ -428,7 +572,7 @@ body.dare-theme {
         }
 
         to {
-            transform: translateY(-10px);
+            transform: translateY(-8px);
         }
     }
 
