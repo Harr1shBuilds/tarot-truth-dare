@@ -97,30 +97,27 @@ document.addEventListener("DOMContentLoaded", function () {
     btnDare.addEventListener('click', () => switchToRitual('dare'));
     btnBack.addEventListener('click', switchToSelect);
 
-    // ── 🔮 3. The Ritual (3-Card Emergence) ────────────────────────
+    // ── 🔮 3. The Ritual (Cinematic Fullscreen) ───────────────────
     cards.forEach((card, index) => {
         card.addEventListener('click', async () => {
-            if (gameState.isFlipping || card.classList.contains('flipped')) return;
+            if (gameState.isFlipping || card.classList.contains('flipped') || card.classList.contains('fullscreen')) return;
             gameState.isFlipping = true;
 
             // 1. Chosen One Focus
             cards.forEach(c => {
                 if (c !== card) c.classList.add('dim');
             });
-            card.classList.add('active');
+            body.classList.add('ritual-focus');
 
             triggerHaptic('short');
             playWhoosh();
 
             // 2. Fetch Ritual Data from Ether
-            // Repeat prevention: if we draw the same ID, we retry once (rare with 1000 rows)
             let draw;
             let retryCount = 0;
-
             while (retryCount < 3) {
                 const { data, error } = await db.rpc('get_random_card', { card_type: gameState.type });
                 if (error || !data || data.length === 0) break;
-
                 draw = data[0];
                 if (draw.id !== gameState.lastCardId) break;
                 retryCount++;
@@ -143,29 +140,29 @@ document.addEventListener("DOMContentLoaded", function () {
             // 3. The Grand Reveal (Delay for Drama)
             setTimeout(() => {
                 card.classList.add('flipped');
+                card.classList.add('fullscreen'); // Cinematic Growth
                 playChime();
                 triggerHaptic('impact');
                 gameState.revealedCount++;
                 gameState.isFlipping = false;
 
-                // 4. Cinematic Scroll to Center
-                card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
                 // Show reset after first reveal
                 if (gameState.revealedCount >= 1) {
                     btnAgain.classList.add('visible');
                 }
-            }, 600);
+            }, 200); // Quick transition as requested
         });
     });
 
     btnAgain.addEventListener('click', () => {
         playWhoosh();
-        // Trigger re-emergence by briefly hiding and showing stage
-        pageRitual.classList.remove('active');
-        setTimeout(() => {
-            switchToRitual(gameState.type);
-        }, 300);
+        body.classList.remove('ritual-focus');
+        cards.forEach(card => {
+            card.classList.remove('fullscreen', 'dim', 'flipped');
+        });
+        btnAgain.classList.remove('visible');
+        gameState.revealedCount = 0;
+        gameState.isFlipping = false;
     });
 
     // ── 🌌 4. Background Particles (Arcane Dust & Stars) ───────────
