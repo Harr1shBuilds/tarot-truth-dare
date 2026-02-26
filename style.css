@@ -265,14 +265,19 @@ body::after {
     position: fixed;
     inset: 0;
     display: flex;
+    flex-direction: column;
+    /* Stack card and button vertically */
     align-items: center;
     justify-content: center;
-    background: rgba(0, 0, 0, 0.65);
-    backdrop-filter: brightness(0.7);
+    gap: 40px;
+    /* Safe gap to prevent overlap */
+    background: rgba(0, 0, 0, 0.85);
+    /* Slightly darker for focus */
+    backdrop-filter: blur(10px) brightness(0.6);
     z-index: 2000;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.4s ease;
 }
 
 .tarot-overlay.active {
@@ -280,19 +285,20 @@ body::after {
     pointer-events: auto;
 }
 
-/* Smooth Center Animation */
+/* Center Animation (Optimized) */
 .tarot-overlay .tarot-card {
-    width: min(90vw, 420px);
-    aspect-ratio: 2 / 3;
-    animation: ritualCenter 0.6s ease-out forwards;
+    width: min(85vw, 400px);
+    aspect-ratio: 2 / 3.2;
+    animation: ritualCenter 0.7s cubic-bezier(0.19, 1, 0.22, 1) forwards;
     will-change: transform;
+    filter: drop-shadow(0 0 40px rgba(212, 175, 55, 0.3));
 }
 
-/* Animation */
+/* Animation: Ensure end rotation shows front (360 + flip) */
 @keyframes ritualCenter {
     from {
-        transform: scale(0.7) rotateY(0deg);
-        opacity: 0.6;
+        transform: scale(0.6) rotateY(0deg);
+        opacity: 0;
     }
 
     to {
@@ -486,21 +492,23 @@ body.ritual-focus .spread {
 /* ================= RESET BUTTON ================= */
 
 .btn-reset {
-    position: fixed;
-    bottom: 60px;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 14px 40px;
+    position: relative;
+    /* Relative within the flex overlay */
+    margin-top: 0;
+    padding: 16px 45px;
     border: 1px solid var(--gold);
-    background: none;
+    background: rgba(0, 0, 0, 0.4);
     color: var(--gold);
     font-family: 'Playfair Display', serif;
-    letter-spacing: 3px;
+    font-size: 14px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
     cursor: pointer;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.3s ease;
+    transition: all 0.4s ease;
     z-index: 2100;
+    backdrop-filter: blur(5px);
 }
 
 .btn-reset.visible {
@@ -509,8 +517,8 @@ body.ritual-focus .spread {
 }
 
 .btn-reset:hover {
-    background: rgba(212, 175, 55, 0.08);
-    box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+    background: rgba(212, 175, 55, 0.15);
+    box-shadow: 0 0 25px rgba(212, 175, 55, 0.4);
 }
 
 .draw-hint {
