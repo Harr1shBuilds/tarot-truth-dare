@@ -97,10 +97,12 @@ document.addEventListener("DOMContentLoaded", function () {
     btnDare.addEventListener('click', () => switchToRitual('dare'));
     btnBack.addEventListener('click', switchToSelect);
 
-    // ── 🔮 3. The Ritual (Cinematic Fullscreen) ───────────────────
+    const overlay = document.getElementById('overlay');
+
+    // ── 🔮 3. The Ritual (Cinematic Overlay) ───────────────────
     cards.forEach((card, index) => {
         card.addEventListener('click', async () => {
-            if (gameState.isFlipping || card.classList.contains('flipped') || card.classList.contains('fullscreen')) return;
+            if (gameState.isFlipping || card.classList.contains('flipped') || overlay.classList.contains('active')) return;
             gameState.isFlipping = true;
 
             // 1. Chosen One Focus
@@ -137,30 +139,35 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }
 
-            // 3. The Grand Reveal (Delay for Drama)
+            // 3. The Grand Reveal (Cinematic Overlay)
             requestAnimationFrame(() => {
-                setTimeout(() => {
-                    card.classList.add('flipped');
-                    card.classList.add('fullscreen'); // Cinematic Growth
-                    playChime();
-                    triggerHaptic('impact');
-                    gameState.revealedCount++;
-                    gameState.isFlipping = false;
+                // Clone the prepared card
+                const clone = card.cloneNode(true);
+                clone.classList.add('flipped'); // Ensure clone starts flipped or animates
 
-                    // Show reset after first reveal
-                    if (gameState.revealedCount >= 1) {
-                        btnAgain.classList.add('visible');
-                    }
-                }, 200); // Quick transition as requested
+                overlay.innerHTML = "";
+                overlay.appendChild(clone);
+                overlay.classList.add("active");
+
+                playChime();
+                triggerHaptic('impact');
+                gameState.revealedCount++;
+                gameState.isFlipping = false;
+
+                // Show reset
+                btnAgain.classList.add('visible');
             });
         });
     });
 
     btnAgain.addEventListener('click', () => {
         playWhoosh();
+        overlay.classList.remove('active');
+        overlay.innerHTML = "";
+
         body.classList.remove('ritual-focus');
         cards.forEach(card => {
-            card.classList.remove('fullscreen', 'dim', 'flipped');
+            card.classList.remove('dim', 'flipped');
         });
         btnAgain.classList.remove('visible');
         gameState.revealedCount = 0;

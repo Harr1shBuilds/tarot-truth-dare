@@ -260,31 +260,43 @@ body::after {
     pointer-events: none;
 }
 
-/* ================= FULLSCREEN RITUAL MODE ================= */
-
-.tarot-card.fullscreen {
+/* ===== Overlay Layer ===== */
+.tarot-overlay {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    width: 88vw;
-    max-width: 420px;
-    aspect-ratio: 2 / 3;
-    transform-origin: center;
-    z-index: 1000;
-    animation: ritualExpandSmooth 0.8s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
-    filter: drop-shadow(0 0 50px rgba(212, 175, 55, 0.4));
-    /* Safe pop on dark overlay */
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: brightness(0.7);
+    z-index: 2000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
 }
 
-/* Smooth 360 Spin + Zoom */
-@keyframes ritualExpandSmooth {
-    0% {
-        transform: translate(-50%, -50%) rotateY(0deg) scale(0.7);
-        opacity: 0.5;
+.tarot-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Smooth Center Animation */
+.tarot-overlay .tarot-card {
+    width: min(90vw, 420px);
+    aspect-ratio: 2 / 3;
+    animation: ritualCenter 0.6s ease-out forwards;
+    will-change: transform;
+}
+
+/* Animation */
+@keyframes ritualCenter {
+    from {
+        transform: scale(0.7) rotateY(0deg);
+        opacity: 0.6;
     }
 
-    100% {
-        transform: translate(-50%, -50%) rotateY(360deg) scale(1);
+    to {
+        transform: scale(1) rotateY(360deg);
         opacity: 1;
     }
 }
@@ -475,7 +487,7 @@ body.ritual-focus .spread {
 
 .btn-reset {
     position: fixed;
-    top: calc(50% + 42vh);
+    bottom: 60px;
     left: 50%;
     transform: translateX(-50%);
     padding: 14px 40px;
@@ -483,14 +495,12 @@ body.ritual-focus .spread {
     background: none;
     color: var(--gold);
     font-family: 'Playfair Display', serif;
-    font-size: 13px;
     letter-spacing: 3px;
-    border-radius: 4px;
     cursor: pointer;
     opacity: 0;
     pointer-events: none;
-    transition: all 0.6s ease;
-    z-index: 1100;
+    transition: opacity 0.3s ease;
+    z-index: 2100;
 }
 
 .btn-reset.visible {
