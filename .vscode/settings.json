@@ -1,6 +1,3 @@
 {
-    "deno.enable": true,
-    "deno.enablePaths": [
-        "supabase/functions"
-    ]
+    "python.defaultInterpreterPath": ".venv/Scripts/python.exe"
 }
