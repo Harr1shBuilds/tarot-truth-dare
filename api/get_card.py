@@ -20,7 +20,7 @@ SUPABASE_URL = os.environ.get("SUPABASE_URL", "")
 SUPABASE_KEY = os.environ.get("SUPABASE_KEY", "")
 
 
-def _call_rpc(card_type: str) -> list:
+def _call_rpc(card_type: str | None) -> list:
     """Call the Supabase get_random_card RPC via REST."""
     url = f"{SUPABASE_URL}/rest/v1/rpc/get_random_card"
     headers = {
