@@ -1,10 +1,25 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // ── Supabase Config ────────────────────────────────────────────
-    const SUPABASE_URL = 'https://xkaozfnnosnrifewsvmh.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhrYW96Zm5ub3NucmlmZXdzdm1oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwMjkzNDIsImV4cCI6MjA4NzYwNTM0Mn0.uF07fMYKbCc8hL9brhpVOUpnstWcx7ZdKcv2MqJ4Gvg';
-    const { createClient } = supabase;
-    const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+    // ── API Configuration ────────────────────────────────────────
+    const API_ENDPOINT = '/api/get_card';
 
+    // ── Repetition Prevention ────────────────────────────────────
+    // Track recently shown card IDs (up to 5) to avoid immediate repeats
+    const MAX_RECENT = 5;
+    const recentCardIds = [];
+
+    function trackCard(id) {
+        if (!id) return;
+        recentCardIds.push(id);
+        if (recentCardIds.length > MAX_RECENT) {
+            recentCardIds.shift();
+        }
+    }
+
+    function getExcludeParam() {
+        return recentCardIds.length > 0 ? recentCardIds.join(',') : '';
+    }
+
+    // ── DOM Elements ─────────────────────────────────────────────
     const cards = document.querySelectorAll('.tarot-card');
     const focusLayer = document.getElementById('focusLayer');
     const resetBtn = document.getElementById('resetBtn');
@@ -20,12 +35,23 @@ document.addEventListener("DOMContentLoaded", function () {
             if (cardDrawn) return;
             cardDrawn = true;
 
-            // Fetch Data
-            let draw;
+            // Fetch card from the backend API
+            let draw = null;
             try {
-                const { data, error } = await db.rpc('get_random_card', { card_type: gameState.type });
-                if (data && data.length > 0) draw = data[0];
-            } catch (e) { }
+                const exclude = getExcludeParam();
+                const url = `${API_ENDPOINT}?type=${gameState.type}${exclude ? '&exclude=' + exclude : ''}`;
+                const response = await fetch(url);
+
+                if (response.ok) {
+                    const json = await response.json();
+                    if (json.card) {
+                        draw = json.card;
+                        trackCard(draw.id);
+                    }
+                }
+            } catch (e) {
+                console.error('Failed to fetch card:', e);
+            }
 
             // Update card UI before flipping
             const textEl = card.querySelector('.ritual-text');
